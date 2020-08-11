@@ -21,12 +21,13 @@ Route::post('login', 'UserController@authenticate');
 Route::group(['middleware' => ['jwt.verify']], function() {
 
     Route::get('user', 'UserController@getAuthenticatedUser');
-// Make Transfer Route
-    Route::post('/pay', 'PaymentController@payviacard');
-// OTP Validation route
-    Route::post('/payment-validate', 'PaymentController@validatePayment');
-// GetUsersTransaction Route
-    Route::get('getTransactions/{email}', 'PaymentController@getTransactions');
-// SearchforUser Route
-    Route::get('searchTransactions/{email}', 'PaymentController@@searchTransactions');
+
 });
+Route::post('/transfer', 'TransactionController@payViaUssd');
+// OTP Validation route
+    Route::post('/payment-validate', 'TransactionController@validatePayment');
+// GetUsersTransaction Route
+    Route::get('Transactions', 'TransactionController@Transactions');
+// SearchforUser Route
+    Route::get('search/user/{email}', 'TransactionController@search');
+// Make Transfer Route

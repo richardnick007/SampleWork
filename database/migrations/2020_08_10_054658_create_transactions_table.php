@@ -13,16 +13,15 @@ class CreateTransactionsTable extends Migration
      */
     public function up()
     {
+
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->integer('customerId');
+            $table->string('account_bank');
+            $table->String('account_number');
             $table->string('amount');
-            $table->string('status');
+            $table->string('narration');
             $table->string('currency');
-            $table->string('email');
-            $table->integer('AccountId');
-            $table->string('paymentType');
-            $table->string('transaction_reference');
+            $table->string('reference');
             $table->timestamps();
         });
     }

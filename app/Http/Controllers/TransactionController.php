@@ -7,13 +7,12 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Paystack;
 use App\User;
 use App\Transaction;
+use App\Respository\transfer;
 
-class PaymentController extends Controller
+class TransactionController extends Controller
 {
-
     public function getKey($seckey){
         $hashedkey = md5($seckey);
         $hashedkeylast12 = substr($hashedkey, -12);
@@ -30,26 +29,27 @@ class PaymentController extends Controller
         $encData = openssl_encrypt($data, 'DES-EDE3', $key, OPENSSL_RAW_DATA);
         return base64_encode($encData);
     }
-
-    public function payviacard(Request $request){ // set up a function to test card payment.
-
+    
+    // Process Transfer and store to DB
+    public function payViaUssd(Request $request){ // set up a function to test card payment.
+        try {
+            
+            if(!$request){
+                return response()->json(Array("message"=>"Enter valid information"));
+            }
         error_reporting(E_ALL);
         ini_set('display_errors',1);
         
-        $data = array('PBFPubKey' => 'FLWPUBK_TEST-5e407cf07c9d5b4c930bbd7022cabca5-X',
-        'cardno' => $request->cardno,
-        'currency' =>  $request->currency,
-        'country' =>  $request->country,
-        'cvv' =>  $request->cvv,
-        'amount' =>  $request->amount,
-        'expiryyear' => $request->expiryyear,
-        'expirymonth' =>  $request->expirymonth,
-        'suggested_auth' =>$request->suggested_auth,
-        'pin' => $request->pin,
-        'email' => $request->email,
-        'phonenumber' =>  $request->phonenumber,
-    
-        'txRef' => 'MXX-ASC-4578');
+        $data = array(
+        'account_bank'=> $request->account_bank,
+        'account_number' =>  $request->account_number,      
+        'amount'=> $request->amount,
+        'narration'=> $request->narration,
+        'currency'=> $request->currency,
+        'reference'=> $request->reference,
+        'callback_url'=> 'https://webhook.site/b3e505b0-fe02-430e-a538-22bbbce8ce0d',
+        'debit_currency'=> 'NGN');
+
         
         $SecKey = 'FLWSECK_TEST-43eef95d8fef8979f5560f297a74fc18-X';
         
@@ -68,7 +68,7 @@ class PaymentController extends Controller
         
         $ch = curl_init();
         
-        curl_setopt($ch, CURLOPT_URL, "https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/charge");
+        curl_setopt($ch, CURLOPT_URL, "https://api.flutterwave.com/v3/transfers");
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postdata)); //Post Fields
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -93,17 +93,15 @@ class PaymentController extends Controller
            
             $transaction = new Transaction;
 
-            $transaction->customerId = $data['customerId'];
+            $transaction->account_bank = $request->account_bank;
+            $transaction->account_number = $request->account_number;
             $transaction->amount = $request->amount;
-            $transaction->status = $data['status'];
+            $transaction->narration = $request->narration;
             $transaction->currency = $request->currency;
-            $transaction->email = $request->email;
-            $transaction->AccountId = $data['AccountId'];
-            $transaction->paymentType = $data['paymentType'];
-            $transaction->transaction_reference = $data['flwRef'];
+            $transaction->reference = $request->reference;
             $transaction->save();
-            
-            return response()->json(Array("message"=>"Please check our phone and verif to the OTP to complete the patment", "transaction_refrence"=>$data['flwRef']));
+            // return response()->json(Array("message"=>"Pament successfull completed"));
+            return response()->json(Array("message"=>"Please USSD to complete the transaction"));
 
         }else{
             if(curl_error($ch))
@@ -113,14 +111,20 @@ class PaymentController extends Controller
         }
         
         curl_close($ch);
+    } 
+    catch (Throwable $e) {
+        report($e);
+
+        return response()->json(Array("message"=>"An error occurred"));
     }
-    
+}
+
     public function validatePayment(Request $request){ // set up a function to test card payment.
         
         $postdata = array(
             "PBFPubKey"=> $request->PBFPubKey,
             "transaction_reference"=> $request->transaction_reference, 
-            "otp"=> $request->otp
+            "ussd"=> $request->ussd
         );
         
         $ch = curl_init();
@@ -164,16 +168,17 @@ class PaymentController extends Controller
     }
 
 // Getting List of transaction for Login User
-    public function getTransactions(){
+    public function Transactions(){
 
         return Transaction::whereUser_id(Auth::user()->id);
 
     }
 // Searching Users Transfer Using email as Parameter
-    public function searchTransactions($email){
-
-        return Transaction::where(['email'=>$email])->get();
-
+    public function search($fullname){
+        $transaction = Transaction::find($fullname);
+        if(is_null($fullname)){
+            return response()->json('Record not found!', 404);
+        }
+        return response()->json('', 200);
     }
-   
 }
