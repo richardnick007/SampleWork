@@ -25,7 +25,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 });
 Route::post('/transfer', 'TransactionController@payViaUssd');
 // OTP Validation route
-    Route::post('/payment-validate', 'TransactionController@validatePayment');
+    Route::post('/validation', 'TransactionController@validatePayment');
 // GetUsersTransaction Route
     Route::get('Transactions', 'TransactionController@Transactions');
 // SearchforUser Route
