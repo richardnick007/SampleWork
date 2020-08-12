@@ -22,12 +22,15 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
     Route::get('user', 'UserController@getAuthenticatedUser');
 
+    Route::post('/transfer', 'TransactionController@transfer');
+    // GetUsersTransaction Route
+    Route::get('transactions', 'TransactionController@getTransaction');
+    // SearchforUser Route
+    Route::get('transfer/{name}', 'TransactionController@search');
+    // Make Transfer Route
 });
-Route::post('/transfer', 'TransactionController@payViaUssd');
-// OTP Validation route
-    Route::post('/validation', 'TransactionController@validatePayment');
-// GetUsersTransaction Route
-    Route::get('Transactions', 'TransactionController@Transactions');
-// SearchforUser Route
-    Route::get('search/user/{email}', 'TransactionController@search');
-// Make Transfer Route
+Route::fallback(function(){
+    return response()->json([
+        'message' => 'Page Not Found.'], 404);
+});
+

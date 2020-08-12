@@ -8,9 +8,8 @@ class Transaction extends Model
 {
     protected $table = 'transactions';
 
-
     protected $fillable =[
-        'account_bank','account_number','amount','narration','currency','reference',
+        'bank_code','account_number','amount','full_name','currency','debit_currency','narration','fee'.'status','requires_approval','is_approved','bank_name',
     ];
 
 }

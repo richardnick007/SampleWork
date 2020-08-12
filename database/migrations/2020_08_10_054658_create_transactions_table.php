@@ -13,15 +13,22 @@ class CreateTransactionsTable extends Migration
      */
     public function up()
     {
+   
 
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('account_bank');
+            $table->string('bank_code');
             $table->String('account_number');
             $table->string('amount');
-            $table->string('narration');
+            $table->string('full_name');
             $table->string('currency');
-            $table->string('reference');
+            $table->string('debit_currency');
+            $table->string('narration');
+            $table->string('fee');
+            $table->string('status');
+            $table->integer('requires_approval');
+            $table->integer('is_approved');
+            $table->string('bank_name');
             $table->timestamps();
         });
     }
