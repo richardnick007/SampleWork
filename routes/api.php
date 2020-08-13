@@ -26,11 +26,10 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     // GetUsersTransaction Route
     Route::get('transactions', 'TransactionController@getTransaction');
     // SearchforUser Route
-    Route::get('transfer/{name}', 'TransactionController@search');
+    Route::get('transfers/{name}', 'TransactionController@search');
     // Make Transfer Route
 });
 Route::fallback(function(){
     return response()->json([
         'message' => 'Page Not Found.'], 404);
 });
-

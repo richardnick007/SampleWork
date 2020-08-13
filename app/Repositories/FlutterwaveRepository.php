@@ -79,7 +79,7 @@ class FlutterwaveRepository implements FlutterwaveInterface
         }else{
             if(curl_error($ch))
             {
-            dd(curl_error($ch));
+            return response()->json(curl_error($ch));
             }
         }
     
