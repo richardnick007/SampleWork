@@ -92,8 +92,8 @@ class FlutterwaveRepository implements FlutterwaveInterface
         return response()->json(Transaction::get(),200);
 
     }
-    public function search($name = null){
-        $transaction = Transaction::where(['full_name'=>$name])->get();
+    public function search($full_name = null){
+        $transaction = array("transaction"=>Transaction::find($full_name));
         return response()->json(array('status'=>200,'transaction'=>$transaction));
     }
 }
