@@ -87,12 +87,18 @@ class FlutterwaveRepository implements FlutterwaveInterface
     
         curl_close($ch);
     } 
+    public function get_stories_type(Request $request, $type= null)
+    {
+        $stories = Story::where(['story_type'=>$type])->get();
+        return response()->json(array('status' =>200,'stories'=>$stories));
+    } 
     public function Transactions(){
-        
-        return response()->json(Transaction::get(),200);
+        $transactions = Transaction::where(['status'=>success])->get();
+        return response()->json(array('status' =>200,'transactions'=>$transaction));
 
     }
     public function search($full_name = null){
+
         $transaction = array("transaction"=>Transaction::find($full_name));
         return response()->json(array('status'=>200,'transaction'=>$transaction));
     }
