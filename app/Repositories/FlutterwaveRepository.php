@@ -72,7 +72,8 @@ class FlutterwaveRepository implements FlutterwaveInterface
                 $transaction->is_approved = $data['is_approved'];
                 $transaction->bank_name = $data['bank_name'];
                 $transaction->save();
-                return response()->json(Array("message"=>"Transfer Successful"), 200);
+                
+                return response()->json(array('status' =>200,'message'=>'transfer Successfully','transaction'=>$transaction));
 
             }else{
                 return response()->json(Array("message"=>"Transfer Unsuccessful"));
@@ -87,15 +88,12 @@ class FlutterwaveRepository implements FlutterwaveInterface
         curl_close($ch);
     } 
     public function Transactions(){
-
-        return Transaction::whereUser_id(Auth::user()->id);
+        
+        return response()->json(Transaction::get(),200);
 
     }
-    public function search($firstname){
-        $transaction = Transaction::find($firstname);
-        if(is_null($firstname)){
-            return response()->json(["message" => "Record not found!"], 404);
-        }
-        return response()->json($transaction, 200);
+    public function search($name = null){
+        $transaction = Transaction::where(['full_name'=>$name])->get();
+        return response()->json(array('status'=>200,'transaction'=>$transaction));
     }
 }

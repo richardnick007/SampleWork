@@ -26,7 +26,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     // GetUsersTransaction Route
     Route::get('transactions', 'TransactionController@getTransaction');
     // SearchforUser Route
-    Route::get('transfers/{name}', 'TransactionController@search');
+    Route::get('transfers/{full_name}', 'TransactionController@search');
     // Make Transfer Route
 });
 Route::fallback(function(){
