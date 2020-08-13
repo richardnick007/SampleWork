@@ -87,9 +87,9 @@ class FlutterwaveRepository implements FlutterwaveInterface
     
         curl_close($ch);
     } 
-    public function Transactions(){
-        $transactions = Transaction::where(['status'=>success])->get();
-        return response()->json(array('status' =>200,'transactions'=>$transaction));
+    public function transactions(){
+        $transaction = Transaction::where(['status'=>success])->get();
+        return response()->json(array('status' =>200,'transaction'=>$transaction));
 
     }
     public function search($full_name = null){

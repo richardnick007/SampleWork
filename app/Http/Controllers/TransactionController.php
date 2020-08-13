@@ -22,7 +22,7 @@ class TransactionController extends Controller
     $this->flutterwaveRepository->transfer($request);
     }
     public function getTransaction(){
-        $this->flutterwaveRepository->Transactions();
+        $this->flutterwaveRepository->transactions();
     }
     public function search($name){
         $this->flutterwaveRepository->search($name);
