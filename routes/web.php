@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('transactions', 'TransactionController@getTransaction');
+Route::get('transfers/{full_name}', 'TransactionController@search');
+

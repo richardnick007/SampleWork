@@ -22,6 +22,7 @@ class FlutterwaveRepository implements FlutterwaveInterface
             'narration' => 'required',
             'debit_currency' => 'required',
         ];
+        // Validating users inputs
         $validation = Validator::make($request->all(), $rules);
         if($validation->fails()){
             return response()->json($validation->errors(), 400);
@@ -39,7 +40,7 @@ class FlutterwaveRepository implements FlutterwaveInterface
         'debit_currency'=> 'NGN');
 
         $SecKey = 'FLWSECK_TEST-43eef95d8fef8979f5560f297a74fc18-X';
-    
+            
         $ch = curl_init();
     
         curl_setopt($ch, CURLOPT_URL, "https://api.flutterwave.com/v3/transfers");
@@ -57,7 +58,6 @@ class FlutterwaveRepository implements FlutterwaveInterface
         $result = json_decode($curl_request, true);
             if($result['status']=="success"){
                 $data = $result['data'];
-
                 $transaction = new Transaction;
                 $transaction->bank_code = $data['bank_code'];
                 $transaction->account_number = $data['account_number'];
@@ -88,8 +88,7 @@ class FlutterwaveRepository implements FlutterwaveInterface
         curl_close($ch);
     } 
     public function transactions(){
-        $transaction = Transaction::where(['status'=>success])->get();
-        return response()->json(array('status' =>200,'transaction'=>$transaction));
+        return response()->json(Transaction::get(),200);
 
     }
     public function search($full_name = null){
