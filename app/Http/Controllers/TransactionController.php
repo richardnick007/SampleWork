@@ -19,14 +19,7 @@ class TransactionController extends Controller
         
     }      
     public function transfer(Request $request){
-       $transfer= $this->flutterwaveRepository->transfer($request);
-
-       if($transfer){
-            return response()->json(Array("message"=>"Transfer Successful"), 200);
-       }else{
-            return response()->json(Array("message"=>"Transfer Unsuccessful"), 400);
-       }
-
+    $this->flutterwaveRepository->transfer($request);
     }
     public function getTransaction(){
         $this->flutterwaveRepository->Transactions();
