@@ -87,11 +87,6 @@ class FlutterwaveRepository implements FlutterwaveInterface
     
         curl_close($ch);
     } 
-    public function get_stories_type(Request $request, $type= null)
-    {
-        $stories = Story::where(['story_type'=>$type])->get();
-        return response()->json(array('status' =>200,'stories'=>$stories));
-    } 
     public function Transactions(){
         $transactions = Transaction::where(['status'=>success])->get();
         return response()->json(array('status' =>200,'transactions'=>$transaction));
