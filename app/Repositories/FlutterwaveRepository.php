@@ -23,8 +23,8 @@ class FlutterwaveRepository implements FlutterwaveInterface
             'debit_currency' => 'required',
         ];
         $validation = Validator::make($request->all(), $rules);
-        if($validator->fails()){
-            return response()->json($validator->errors(), 400);
+        if($validation->fails()){
+            return response()->json($validation->errors(), 400);
         }
         error_reporting(E_ALL);
         ini_set('display_errors',1);
