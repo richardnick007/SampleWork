@@ -73,7 +73,7 @@ class FlutterwaveRepository implements FlutterwaveInterface
                 $transaction->bank_name = $data['bank_name'];
                 $transaction->save();
                 
-                return response()->json(array('status' =>200,'message'=>'transfer Successfully','transaction'=>$transaction));
+                return response()->json($transaction,201);
 
             }else{
                 return response()->json(Array("message"=>"Transfer Unsuccessful"));
